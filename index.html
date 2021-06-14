@@ -1,0 +1,115 @@
+<html>
+
+<body>
+    <h1 style="text-align: center">This chart showcases both climbing speed and height of the climber</h1>
+    <canvas id="height_label_canvas" width="60%" height="300%"
+        style="border: 1px solid black;position:relative;left:5px; border-style: hidden;">
+    </canvas>
+
+    <canvas id="chart_canvas" width="600%" height="300%" style="border: 1px solid black;position:relative;  ">
+    </canvas>
+
+    <br />
+    <canvas id="time_label_canvas" width="600%" height="30%"
+        style="border: 1px solid black;position:relative; left:65px;  border-style: hidden; top:-5px">
+    </canvas>
+
+
+    <script>
+
+
+        var x = [{}, {}];
+        var myData = [
+            { y: 2 },
+            { y: 3 },
+            { y: 5 },
+            { y: 6 },
+            { y: 2 },
+            { y: 10 },
+            { y: 5 },
+            { y: 4 },
+            { y: 0 },
+            { y: 3 },
+            { y: 2.5 },
+            { y: 1 },
+            { y: 8 },
+            { y: 5 },
+            { y: 2 },
+            { y: 1 },
+
+        ]
+
+        var c = document.getElementById("chart_canvas");
+        var ctx = c.getContext("2d");
+        var width = c.scrollWidth;
+        var height = c.scrollHeight;
+        ctx.font = "15px Arial";
+        ctx.fillStyle = "red";
+        ctx.fillText("Fast Movement", 10, 20);
+        ctx.fillStyle = "orange";
+        ctx.fillText("Moderate Movement", 10, 35);
+        ctx.fillStyle = "green";
+        ctx.fillText("Slow Movement", 10, 50);
+
+        var l = document.getElementById("time_label_canvas");
+        var ctxl = l.getContext("2d");
+        var label_width = l.scrollWidth;
+        var label_height = l.scrollHeight;
+        for (let i = 1; i < myData.length; i++) {
+            ctxl.moveTo(label_width * ((i) / myData.length), 0);
+            ctxl.lineTo(label_width * ((i) / myData.length), 10);
+            ctxl.fillStyle = "black";
+            ctxl.fillText(i, label_width * ((i) / myData.length) - 5, 20);
+        }
+        ctxl.stroke();
+
+        var h = document.getElementById("height_label_canvas");
+        var ctxh = h.getContext("2d");
+        var height_width = h.scrollWidth;
+        var height_height = h.scrollHeight;
+        for (let i = 1; i < 10; i++) {
+            ctxh.moveTo(height_width, height_height * ((i) / 10));
+            ctxh.lineTo(height_width-10, height_height * ((i) / 10));
+            ctxh.fillStyle = "black";
+            ctxh.fillText(10-i, height_width-25, height_height * ((i) / 10)+8);
+            console.log(i);
+        }
+        ctxh.stroke();
+
+
+        for (let i = 0; i < myData.length; i++) {
+            ctx.beginPath();
+            if (i > 0)
+                ctx.moveTo(width * ((i) / myData.length), height - myData[i - 1].y*30);
+            else
+                ctx.moveTo(0, height);
+            if (i < myData.length && i > 0) {
+                if (Math.abs(myData[i].y - myData[i - 1].y) >= 6) {
+                    ctx.strokeStyle = "red";
+                } else if (Math.abs(myData[i].y - myData[i - 1].y) <6 && (Math.abs(myData[i].y - myData[i - 1].y) > 2)) {
+                    ctx.strokeStyle = "orange";
+                } else if (Math.abs(myData[i].y - myData[i - 1].y) <= 2) {
+                    ctx.strokeStyle = "green";
+                }
+            } else if (i == 0) {
+                if (Math.abs(myData[i + 1].y - myData[i].y) >=6) {
+                    ctx.strokeStyle = "red";
+                } else if (Math.abs(myData[i + 1].y - myData[i].y) <6 && (Math.abs(myData[i + 1].y - myData[i].y) > 2)) {
+                    ctx.strokeStyle = "orange";
+                } else if (Math.abs(myData[i + 1].y - myData[i].y) <= 2) {
+                    ctx.strokeStyle = "green";
+                }
+            }
+            ctx.lineTo(width * ((i + 1) / myData.length), height - myData[i].y*30);
+            ctx.stroke();
+            ctx.closePath();
+        }
+
+
+
+
+    </script>
+
+</body>
+
+</html>
