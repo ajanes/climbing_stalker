@@ -16,17 +16,27 @@ def get_json():
     print(newest_file)
     with open(newest_file) as csvfile:
         csv_reader = csv.reader(csvfile, delimiter=';')
+        #lines= len(list(csv_reader))
+        #print("lines: "+str(lines))
         index=0
         array=[]
+        lines=0
+        for row in csv_reader:
+            lines+=1
+        csvfile.seek(0)
+        print(str(lines))
         for row in csv_reader:
             obj={}
-            if(index<=17):
+            print(str(index))
+            if(index>lines-18):
                 obj["velocity"]=(float(row[6]))
                 #print(row[6])
                 array.append(obj)
-                index+=1
+                index+=1     
             else:
+                index+=1
                 continue
+            
         print(array)
     return json.dumps(array)
 
