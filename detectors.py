@@ -9,7 +9,11 @@ def deviation(sample_array):
     deviation_sum = 0
     for element in sample_array:
         deviation_sum = deviation_sum + (pow((element - average_value), 2))
-    standard_deviation = sqrt(deviation_sum / (len(sample_array) - 1))
+
+    if(len(sample_array)==1):
+        standard_deviation=0
+    else:
+        standard_deviation = sqrt(deviation_sum / (len(sample_array) - 1))
     return standard_deviation, average_value
 
 
