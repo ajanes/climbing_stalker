@@ -1,6 +1,7 @@
 import pyzed.sl as sl
 
 from data_processors import to_csv
+import data_service
 
 
 OBJECT_DETECTED_STARTING_FROM_PERCENT = 40
@@ -72,5 +73,6 @@ if __name__ == "__main__":
                 # To use when the y_velocity from the camera is wrong
                 # buffer_data, old_detector_average = to_csv(obj_array, ACCURACY, MEASUREMENTS_PER_SECOND, buffer_data, old_detector_average)
                 buffer_data, detector_data, old_detector_average = to_csv(obj_array, ACCURACY, MEASUREMENTS_PER_SECOND, buffer_data, detector_data, old_detector_average)
+        data_service.main()
 
     clean_up(zed)

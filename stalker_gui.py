@@ -1,6 +1,7 @@
 import pyzed.sl as sl
 import cv2
 import numpy as np
+import data_service
 
 import cv_viewer.tracking_viewer as cv_viewer
 
@@ -47,7 +48,7 @@ if __name__ == "__main__":
         camera_infos.camera_resolution.height, 404))
     point_cloud_render = sl.Mat()
 
-    # Configure object detection runtime parameters
+    # Configure object detection runtime parameters(len(sample_array)
     obj_runtime_param = sl.ObjectDetectionRuntimeParameters()
     obj_runtime_param.detection_confidence_threshold = OBJECT_DETECTED_STARTING_FROM_PERCENT
     # To select a set of specific object classes
@@ -134,6 +135,7 @@ if __name__ == "__main__":
                     f"ID: {id}\n3D position: [{position[0]},{position[1]},{position[2]}]\nVelocity: [{velocity[0]},{velocity[1]},{velocity[2]}]\n3D dimentions: [{dimensions[0]},{dimensions[1]},{dimensions[2]}]")
                 buffer_data, detector_data, old_detector_data = to_csv(
                     obj_array, ACCURACY, MEASUREMENTS_PER_SECOND, buffer_data, detector_data, old_detector_data)
+        data_service.main()
 
     cv2.destroyAllWindows()
     image_left.free(sl.MEM.CPU)

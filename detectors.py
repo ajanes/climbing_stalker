@@ -58,7 +58,10 @@ def detect_fast_comeback_acceleration(sample_array, measurements_per_second):
         average_acceleration = average_acceleration + \
             (sample_array[i + 1] - sample_array[i]) / \
             (1 / measurements_per_second)
-    average_acceleration = average_acceleration / (measurements_per_second - 1)
+    if(measurements_per_second>1):
+        average_acceleration = average_acceleration / (measurements_per_second - 1)
+    else:
+        average_acceleration=0
     if (average_acceleration < max_acceleration):
         return(True)
     return(False)
