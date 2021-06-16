@@ -45,6 +45,7 @@ app = Flask(__name__, template_folder='')
 
 @app.route('/data')
 def data():
+    print("aaaaa")
     return get_json()
 
 @app.route("/")
@@ -54,8 +55,10 @@ def index():
 
 
 def main():
+    print("data_service main")
     app.run(debug=False)
 
 
 if __name__ == '__main__':
+    print("data_service main call")
     main()
