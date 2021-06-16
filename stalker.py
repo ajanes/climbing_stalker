@@ -72,8 +72,11 @@ if __name__ == "__main__":
                 obj_array = objects.object_list
                 # To use when the y_velocity from the camera is wrong
                 # buffer_data, old_detector_average = to_csv(obj_array, ACCURACY, MEASUREMENTS_PER_SECOND, buffer_data, old_detector_average)
+                print("obj_array")
                 print(obj_array)
                 buffer_data, detector_data, old_detector_average = to_csv(obj_array, ACCURACY, MEASUREMENTS_PER_SECOND, buffer_data, detector_data, old_detector_average)
+            print("after inner if")
+        print("before data_service")
         data_service.main()
 
     clean_up(zed)

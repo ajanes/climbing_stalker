@@ -24,7 +24,7 @@ def get_json():
         for row in csv_reader:
             lines+=1
         csvfile.seek(0)
-        print(str(lines))
+        #print(str(lines))
         for row in csv_reader:
             obj={}
             print(str(index))
