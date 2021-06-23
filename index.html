@@ -19,48 +19,31 @@
 
 
     <script>
+        var path_safe = [];
+        var c = document.getElementById("chart_canvas");
+        var ctx = c.getContext("2d");
+        var width = c.scrollWidth;
+        var height = c.scrollHeight;
+        ctx.font = "15px Arial";
+        var myData;
+        ctx.fillStyle = "red";
+        ctx.fillText("Fast Movement", 10, 20);
+        ctx.fillStyle = "orange";
+        ctx.fillText("Moderate Movement", 10, 35);
+        ctx.fillStyle = "green";
+        ctx.fillText("Slow Movement", 10, 50);
 
-        readTextFile("http://127.0.0.1:5000/data", function (text) {
-            var myData = JSON.parse(text);
+        var l = document.getElementById("time_label_canvas");
+        var ctxl = l.getContext("2d");
+        var label_width = l.scrollWidth;
+        var label_height = l.scrollHeight;
 
-            var c = document.getElementById("chart_canvas");
-            var ctx = c.getContext("2d");
-            var width = c.scrollWidth;
-            var height = c.scrollHeight;
-            ctx.font = "15px Arial";
-            ctx.fillStyle = "red";
-            ctx.fillText("Fast Movement", 10, 20);
-            ctx.fillStyle = "orange";
-            ctx.fillText("Moderate Movement", 10, 35);
-            ctx.fillStyle = "green";
-            ctx.fillText("Slow Movement", 10, 50);
+        var h = document.getElementById("height_label_canvas");
+        var ctxh = h.getContext("2d");
+        var height_width = h.scrollWidth;
+        var height_height = h.scrollHeight;
 
-            var l = document.getElementById("time_label_canvas");
-            var ctxl = l.getContext("2d");
-            var label_width = l.scrollWidth;
-            var label_height = l.scrollHeight;
-            for (let i = 1; i < myData.length; i++) {
-                ctxl.moveTo(label_width * ((i) / myData.length), 0);
-                ctxl.lineTo(label_width * ((i) / myData.length), 10);
-                ctxl.fillStyle = "black";
-                ctxl.fillText(i, label_width * ((i) / myData.length) - 5, 20);
-            }
-            ctxl.stroke();
-
-            var h = document.getElementById("height_label_canvas");
-            var ctxh = h.getContext("2d");
-            var height_width = h.scrollWidth;
-            var height_height = h.scrollHeight;
-            for (let i = 1; i < 10; i++) {
-                ctxh.moveTo(height_width, height_height * ((i) / 10));
-                ctxh.lineTo(height_width - 10, height_height * ((i) / 10));
-                ctxh.fillStyle = "black";
-                ctxh.fillText(10 - i, height_width - 25, height_height * ((i) / 10) + 8);
-                console.log(i);
-            }
-            ctxh.stroke();
-
-
+        function drawline() {
             for (let i = 0; i < myData.length; i++) {
                 ctx.beginPath();
                 if (i > 0)
@@ -85,12 +68,58 @@
                     }
                 }
                 ctx.lineTo(width * ((i + 1) / myData.length), height - myData[i].velocity * 30);
+                path_safe[i] = myData[i];
                 ctx.stroke();
                 ctx.closePath();
             }
-        });
+        }
 
+        setInterval(function () {
+            
+            readTextFile("http://127.0.0.1:5000/data", function (text) {
+                myData = JSON.parse(text);
 
+                if (!isCanvasBlank(c)) {
+                    ctx.strokeStyle = "white";
+                    for (let j = 0; j < 2; j++) {
+                        for (let i = 0; i < path_safe.length; i++) {
+
+                            ctx.beginPath();
+                            if (i > 0)
+                                ctx.moveTo(width * ((i) / path_safe.length), height - path_safe[i - 1].velocity * 30);
+                            else
+                                ctx.moveTo(0, height);
+                            ctx.lineTo(width * ((i + 1) / path_safe.length), height - path_safe[i].velocity * 30);
+                            ctx.stroke();
+                            ctx.closePath();
+
+                        }
+                    }
+                }
+                drawline();
+
+                if (isCanvasBlank(l)) {
+                    for (let i = 1; i < myData.length; i++) {
+                        ctxl.moveTo(label_width * ((i) / myData.length), 0);
+                        ctxl.lineTo(label_width * ((i) / myData.length), 10);
+                        ctxl.fillStyle = "black";
+                        ctxl.fillText(i, label_width * ((i) / myData.length) - 5, 20);
+                    }
+                    ctxl.stroke();
+                }
+
+                if (isCanvasBlank(h)) {
+                    for (let i = 1; i < 10; i++) {
+                        ctxh.moveTo(height_width, height_height * ((i) / 10));
+                        ctxh.lineTo(height_width - 10, height_height * ((i) / 10));
+                        ctxh.fillStyle = "black";
+                        ctxh.fillText(10 - i, height_width - 25, height_height * ((i) / 10) + 8);
+                    }
+                    ctxh.stroke();
+                }
+
+            });
+        }, 1000);
 
         function readTextFile(file, callback) {
             var rawFile = new XMLHttpRequest();
@@ -102,6 +131,12 @@
                 }
             }
             rawFile.send(null);
+        }
+
+        function isCanvasBlank(canvas) {
+            return !canvas.getContext('2d')
+                .getImageData(0, 0, canvas.width, canvas.height).data
+                .some(channel => channel !== 0);
         }
 
     </script>
